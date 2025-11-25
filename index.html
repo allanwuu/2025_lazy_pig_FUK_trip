@@ -1,172 +1,505 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的日本旅遊計畫</title>
-    <style>
-        /* --- 這裡是網頁的美化設定 (CSS) --- */
-        :root { --primary: #ff6b6b; --bg: #f4f7f6; --card: #ffffff; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; }
-        
-        /* 標題區 */
-        header { text-align: center; margin-bottom: 20px; }
-        h1 { margin: 0; font-size: 1.8rem; color: #2d3436; }
-        p.subtitle { color: #636e72; margin-top: 5px; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>行程總覽</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+        "Noto Sans TC", sans-serif;
+    }
 
-        /* 分頁按鈕 (Tabs) */
-        .tabs { display: flex; overflow-x: auto; background: var(--card); padding: 10px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; gap: 10px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: none; font-weight: bold; color: #b2bec3; cursor: pointer; white-space: nowrap; border-radius: 10px; transition: 0.3s; }
-        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 6px rgba(255, 107, 107, 0.4); }
+    body {
+      margin: 0;
+      background: #f5f5f7;
+      color: #222;
+    }
 
-        /* 內容卡片 */
-        .content-section { display: none; animation: fadeIn 0.3s; }
-        .content-section.active { display: block; }
-        .card { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        h2 { margin-top: 0; font-size: 1.2rem; border-left: 5px solid var(--primary); padding-left: 10px; }
-        
-        /* 待辦清單與行程 */
-        ul { list-style: none; padding: 0; }
-        li { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; align-items: center; }
-        li:last-child { border-bottom: none; }
-        .time { font-weight: bold; color: var(--primary); margin-right: 15px; min-width: 50px; }
-        
-        /* 核取方塊樣式 */
-        input[type="checkbox"] { transform: scale(1.5); margin-right: 15px; accent-color: var(--primary); cursor: pointer; }
-        .checked-item { text-decoration: line-through; color: #ccc; }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #ffffffcc;
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e5e5ea;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    header h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+
+    header span {
+      font-size: 13px;
+      color: #555;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 14px auto 40px;
+      padding: 0 14px;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 16px;
+    }
+
+    /* 手機版改為上下排列 */
+    @media (max-width: 768px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .day-nav {
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e5e5ea;
+      align-self: flex-start;
+      position: sticky;
+      top: 68px;
+    }
+
+    .day-nav h2 {
+      font-size: 15px;
+      margin: 0 0 8px;
+    }
+
+    .day-nav small {
+      color: #777;
+      font-size: 12px;
+    }
+
+    .day-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .day-btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 11px;
+      width: 100%;
+      text-align: left;
+      background: #f2f2f7;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease,
+        background 0.08s ease;
+    }
+
+    .day-btn span.day-label {
+      font-weight: 600;
+    }
+
+    .day-btn span.day-sub {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .day-btn.active {
+      background: #007aff;
+      color: #fff;
+      box-shadow: 0 6px 12px rgba(0, 122, 255, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .day-btn.active span.day-sub {
+      color: #e0ecff;
+    }
+
+    .day-btn:hover:not(.active) {
+      background: #e5e5ea;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .content {
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px 18px 20px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e5e5ea;
+      min-height: 260px;
+    }
+
+    .content-header {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .content-header h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .content-header .date {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .content-header .tag {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #f2f2f7;
+      color: #555;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .meta-row span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .meta-row .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: #007aff;
+    }
+
+    .section {
+      border-radius: 10px;
+      padding: 10px 12px 8px;
+      background: #f9f9fb;
+      margin-top: 8px;
+      border: 1px solid #ececf1;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .section-header strong {
+      font-size: 13px;
+    }
+
+    .section-header .section-time {
+      font-size: 11px;
+      color: #777;
+    }
+
+    .section-header .chip {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #e5e5ea;
+      color: #555;
+    }
+
+    .item-list {
+      margin: 4px 0 0;
+      padding-left: 18px;
+      font-size: 13px;
+    }
+
+    .item-list li + li {
+      margin-top: 2px;
+    }
+
+    .note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #777;
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .note-icon {
+      font-size: 14px;
+    }
+
+    .empty {
+      font-size: 13px;
+      color: #888;
+      padding: 10px 0 4px;
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
-    <header>
-        <h1>🇯🇵 東京五天四夜</h1>
-        <p class="subtitle">點擊下方按鈕切換行程</p>
-    </header>
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('memo')">🎒 備忘錄</button>
-        <button class="tab-btn" onclick="openTab('day1')">Day 1</button>
-        <button class="tab-btn" onclick="openTab('day2')">Day 2</button>
-        <button class="tab-btn" onclick="openTab('day3')">Day 3</button>
-        <button class="tab-btn" onclick="openTab('day4')">Day 3</button>
-        <button class="tab-btn" onclick="openTab('day5')">Day 3</button>
+  <header>
+    <div>
+      <h1>旅遊行程</h1>
+      <span>點選左側日期，切換每天的詳細規劃</span>
     </div>
+  </header>
 
-    <div id="memo" class="content-section active">
-        <div class="card">
-            <h2>行前準備</h2>
-            <ul>
-                <li><input type="checkbox" id="item1" onchange="saveState(this)"> <label for="item1">護照要帶</label></li>
-                <li><input type="checkbox" id="item2" onchange="saveState(this)"> <label for="item2">網卡開通</label></li>
-                <li><input type="checkbox" id="item3" onchange="saveState(this)"> <label for="item3">換日幣</label></li>
-            </ul>
-        </div>
-    </div>
+  <main>
+    <!-- 左側：天數選單 -->
+    <aside class="day-nav">
+      <h2>行程日期</h2>
+      <small>點選以切換每日行程</small>
+      <div id="dayList" class="day-list"></div>
+    </aside>
 
-    <div id="day1" class="content-section">
-        <div class="card">
-            <h2>Day 1: 抵達東京</h2>
-            <ul>
-                <li><span class="time">10:00</span> 抵達成田機場</li>
-                <li><span class="time">12:00</span> 搭 Skyliner 到上野</li>
-                <li><span class="time">14:00</span> 飯店 Check-in</li>
-                <li><span class="time">18:00</span> 晚餐：一蘭拉麵</li>
-            </ul>
-        </div>
-    </div>
+    <!-- 右側：內容 -->
+    <section class="content">
+      <div id="contentInner">
+        <!-- 這裡由 JavaScript 動態填入 -->
+      </div>
+    </section>
+  </main>
 
-    <div id="day2" class="content-section">
-        <div class="card">
-            <h2>Day 2: 迪士尼樂園</h2>
-            <ul>
-                <li><span class="time">08:00</span> 出發前往舞濱</li>
-                <li><span class="time">09:00</span> 入園開始排隊</li>
-                <li><span class="time">12:00</span> 午餐：米奇漢堡</li>
-                <li><span class="time">20:00</span> 煙火秀</li>
-            </ul>
-        </div>
-    </div>
+  <script>
+    // 🔧 在這裡修改你的行程資料 ---------------------------------
+    const itinerary = [
+      {
+        id: "day1",
+        label: "Day 1",
+        date: "2026/02/10 (二)",
+        subtitle: "抵達＋市區逛街",
+        startCity: "台北 ✈ 大阪關西",
+        theme: "輕鬆報到＋心齋橋逛街",
+        sections: [
+          {
+            title: "上午",
+            time: "出發 & 抵達",
+            type: "✈ 移動",
+            items: [
+              "桃園機場 → 關西機場",
+              "入境、換錢、領交通卡 / ICOCA",
+              "前往飯店、寄放行李"
+            ]
+          },
+          {
+            title: "下午",
+            time: "心齋橋・道頓堀",
+            type: "🛍 逛街",
+            items: [
+              "心齋橋商店街慢逛",
+              "藥妝店、Uniqlo / GU / ABC Mart",
+              "道頓堀拍招牌蟹、固力果跑跑人"
+            ]
+          },
+          {
+            title: "晚上",
+            time: "晚餐 & 夜景",
+            type: "🍜 美食",
+            items: [
+              "道頓堀拉麵 / 燒肉",
+              "逛唐吉訶德、超市採買",
+              "回飯店休息、整理行李"
+            ]
+          }
+        ],
+        note: "第一天建議行程彈性，依實際班機時間調整，重點是先熟悉周邊環境。"
+      },
+      {
+        id: "day2",
+        label: "Day 2",
+        date: "2026/02/11 (三)",
+        subtitle: "環球影城一日遊",
+        startCity: "大阪",
+        theme: "USJ 玩好玩滿",
+        sections: [
+          {
+            title: "上午",
+            time: "開園衝刺",
+            type: "🎢 遊樂",
+            items: [
+              "一早搭車前往 USJ",
+              "先衝人氣設施：瑪利歐園區 / 哈利波特",
+              "適時補給早餐／咖啡"
+            ]
+          },
+          {
+            title: "下午",
+            time: "表演 & 設施",
+            type: "🎭 表演",
+            items: [
+              "看一場園區表演或遊行",
+              "補玩沒玩到的設施",
+              "下午茶休息、買紀念品"
+            ]
+          },
+          {
+            title: "晚上",
+            time: "返回市區",
+            type: "🌃 夜晚",
+            items: [
+              "閉園後搭車回飯店",
+              "附近簡單吃晚餐",
+              "泡澡＋拉筋，舒緩一整天疲勞"
+            ]
+          }
+        ],
+        note: "若有買快速通關，記得事先確認入場時間與集合地點。"
+      },
+      {
+        id: "day3",
+        label: "Day 3",
+        date: "2026/02/12 (四)",
+        subtitle: "京都一日散策",
+        startCity: "大阪 → 京都",
+        theme: "古都神社 & 小店慢走",
+        sections: [
+          {
+            title: "上午",
+            time: "伏見稻荷大社",
+            type: "⛩ 神社",
+            items: [
+              "搭車前往京都伏見稻荷",
+              "參拜、本殿周邊散步",
+              "千本鳥居拍照"
+            ]
+          },
+          {
+            title: "下午",
+            time: "清水寺・二年坂三年坂",
+            type: "🏯 觀光",
+            items: [
+              "清水寺周邊散策",
+              "二年坂・三年坂小店、和菓子",
+              "可考慮和服體驗（預約制）"
+            ]
+          },
+          {
+            title: "晚上",
+            time: "祇園・花見小路",
+            type: "🍶 晚餐",
+            items: [
+              "祇園晚餐（可預約居酒屋）",
+              "散步花見小路，留意末班車時間",
+              "返回大阪飯店 / 京都住宿點"
+            ]
+          }
+        ],
+        note: "行程可視腳力與天氣刪減點，保留彈性時間喝茶休息。"
+      }
+    ];
+    // ----------------------------------------------------------
 
-     <div id="day3" class="content-section">
-        <div class="card">
-            <h2>Day 3: 市區逛街</h2>
-            <ul>
-                <li><span class="time">10:00</span> 明治神宮</li>
-                <li><span class="time">12:00</span> 原宿逛街</li>
-                <li><span class="time">15:00</span> 澀谷 Sky 展望台</li>
-            </ul>
-        </div>
-    </div>
+    const dayListEl = document.getElementById("dayList");
+    const contentEl = document.getElementById("contentInner");
 
-        <div id="day4" class="content-section">
-        <div class="card">
-            <h2>Day 4: 迪士尼樂園</h2>
-            <ul>
-                <li><span class="time">08:00</span> 出發前往舞濱</li>
-                <li><span class="time">09:00</span> 入園開始排隊</li>
-                <li><span class="time">12:00</span> 午餐：米奇漢堡</li>
-                <li><span class="time">20:00</span> 煙火秀</li>
-            </ul>
-        </div>
-    </div>
+    function renderDayButtons() {
+      dayListEl.innerHTML = "";
+      itinerary.forEach((day, index) => {
+        const btn = document.createElement("button");
+        btn.className = "day-btn" + (index === 0 ? " active" : "");
+        btn.dataset.dayId = day.id;
 
-        <div id="day5" class="content-section">
-        <div class="card">
-            <h2>Day 5: 迪士尼樂園</h2>
-            <ul>
-                <li><span class="time">08:00</span> 出發前往舞濱</li>
-                <li><span class="time">09:00</span> 入園開始排隊</li>
-                <li><span class="time">12:00</span> 午餐：米奇漢堡</li>
-                <li><span class="time">20:00</span> 煙火秀</li>
-            </ul>
-        </div>
-    </div>
-
-</div>
-
-<script>
-    // --- 這裡是讓網頁會動的程式 (JavaScript) ---
-    
-    // 1. 切換分頁功能
-    function openTab(tabName) {
-        var x = document.getElementsByClassName("content-section");
-        for (var i = 0; i < x.length; i++) { x[i].classList.remove("active"); }
-        
-        var btns = document.getElementsByClassName("tab-btn");
-        for (var i = 0; i < btns.length; i++) { btns[i].classList.remove("active"); }
-
-        document.getElementById(tabName).classList.add("active");
-        event.currentTarget.classList.add("active");
+        btn.innerHTML = `
+          <span class="day-label">${day.label}</span>
+          <span class="day-sub">${day.date}</span>
+        `;
+        btn.addEventListener("click", () => setActiveDay(day.id));
+        dayListEl.appendChild(btn);
+      });
     }
 
-    // 2. 記住打勾狀態的功能
-    function saveState(checkbox) {
-        localStorage.setItem(checkbox.id, checkbox.checked);
-        updateStyle(checkbox);
-    }
-    
-    function loadState() {
-        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(function(box) {
-            var saved = localStorage.getItem(box.id);
-            if (saved === 'true') { box.checked = true; }
-            updateStyle(box);
-        });
+    function renderDayContent(day) {
+      if (!day) {
+        contentEl.innerHTML = `<p class="empty">尚未設定行程資料。</p>`;
+        return;
+      }
+
+      const sectionsHtml = day.sections
+        .map(
+          (sec) => `
+        <div class="section">
+          <div class="section-header">
+            <strong>${sec.title}</strong>
+            <span class="section-time">｜${sec.time}</span>
+            ${
+              sec.type
+                ? `<span class="chip">${sec.type}</span>`
+                : ""
+            }
+          </div>
+          <ul class="item-list">
+            ${sec.items.map((item) => `<li>${item}</li>`).join("")}
+          </ul>
+        </div>
+      `
+        )
+        .join("");
+
+      contentEl.innerHTML = `
+        <div class="content-header">
+          <h2>${day.label}</h2>
+          <span class="date">${day.date}</span>
+          ${
+            day.theme
+              ? `<span class="tag">主軸：${day.theme}</span>`
+              : ""
+          }
+        </div>
+        <div class="meta-row">
+          ${
+            day.startCity
+              ? `<span><span class="dot"></span>${day.startCity}</span>`
+              : ""
+          }
+          ${
+            day.subtitle
+              ? `<span>📝 ${day.subtitle}</span>`
+              : ""
+          }
+        </div>
+        ${sectionsHtml}
+        ${
+          day.note
+            ? `<div class="note">
+                 <span class="note-icon">💡</span>
+                 <span>${day.note}</span>
+               </div>`
+            : ""
+        }
+      `;
     }
 
-    function updateStyle(checkbox) {
-        var label = checkbox.nextElementSibling;
-        if(checkbox.checked) { label.classList.add("checked-item"); } 
-        else { label.classList.remove("checked-item"); }
+    function setActiveDay(dayId) {
+      const targetDay = itinerary.find((d) => d.id === dayId);
+      renderDayContent(targetDay);
+
+      document
+        .querySelectorAll(".day-btn")
+        .forEach((btn) => btn.classList.remove("active"));
+
+      const activeBtn = document.querySelector(
+        `.day-btn[data-day-id="${dayId}"]`
+      );
+      if (activeBtn) activeBtn.classList.add("active");
     }
 
-    // 網頁載入時讀取狀態
-    window.onload = loadState;
-</script>
-
+    // 初始化
+    renderDayButtons();
+    if (itinerary.length > 0) {
+      renderDayContent(itinerary[0]);
+    } else {
+      renderDayContent(null);
+    }
+  </script>
 </body>
 </html>
