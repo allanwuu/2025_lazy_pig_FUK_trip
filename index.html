@@ -1,611 +1,244 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>行程總覽</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
-        "Noto Sans TC", sans-serif;
-    }
+<meta charset="UTF-8">
+<title>2025 福岡懶豬之旅 · 行前準備＋每日行程</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    body {
-      margin: 0;
-      background: #f5f5f7;
-      color: #222;
-    }
+<style>
+/* ---------------- 全域設定 ---------------- */
+body {
+  margin: 0;
+  background: #fdfcff;
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+  color: #333;
+}
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: #ffffffcc;
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid #e5e5ea;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+/* ---------------- Tab 切換列 ---------------- */
+.tab-bar {
+  display: flex;
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  z-index: 10;
+}
 
-    header h1 {
-      font-size: 20px;
-      margin: 0;
-    }
+.tab-btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 3px solid transparent;
+}
 
-    header span {
-      font-size: 13px;
-      color: #555;
-    }
+.tab-btn.active {
+  color: #ff6f9c;
+  border-bottom: 3px solid #ff6f9c;
+}
 
-    main {
-      max-width: 1100px;
-      margin: 14px auto 40px;
-      padding: 0 14px;
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 16px;
-    }
+/* ---------------- 卡片樣式（可愛版） ---------------- */
+.card {
+  background: white;
+  margin: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(255, 180, 200, 0.25);
+}
 
-    /* 手機版改為上下排列 */
-    @media (max-width: 768px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-    }
+.card-title {
+  font-size: 17px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-    .day-nav {
-      background: #fff;
-      border-radius: 14px;
-      padding: 12px;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.04);
-      border: 1px solid #e5e5ea;
-      align-self: flex-start;
-      position: sticky;
-      top: 68px;
-    }
+.card-sub {
+  color: #666;
+  font-size: 14px;
+  margin: 4px 0 8px;
+}
 
-    .day-nav h2 {
-      font-size: 15px;
-      margin: 0 0 8px;
-    }
+.status {
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-left: auto;
+  font-weight: bold;
+}
 
-    .day-nav small {
-      color: #777;
-      font-size: 12px;
-    }
+.status-red { background: #ffdddd; color: #c00; }
+.status-yellow { background: #fff2c2; color: #c98b00; }
+.status-green { background: #d9ffd9; color: #0a8f00; }
 
-    .day-list {
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+/* ---------------- 行程內容 ---------------- */
+.section-title {
+  font-weight: bold;
+  margin: 10px 0 6px;
+  font-size: 15px;
+}
 
-    .day-btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 10px 11px;
-      width: 100%;
-      text-align: left;
-      background: #f2f2f7;
-      cursor: pointer;
-      font-size: 13px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      transition: transform 0.08s ease, box-shadow 0.08s ease,
-        background 0.08s ease;
-    }
+.item {
+  padding: 6px 0;
+  font-size: 14px;
+}
 
-    .day-btn span.day-label {
-      font-weight: 600;
-    }
-
-    .day-btn span.day-sub {
-      font-size: 11px;
-      color: #666;
-    }
-
-    .day-btn.active {
-      background: #007aff;
-      color: #fff;
-      box-shadow: 0 6px 12px rgba(0, 122, 255, 0.35);
-      transform: translateY(-1px);
-    }
-
-    .day-btn.active span.day-sub {
-      color: #e0ecff;
-    }
-
-    .day-btn:hover:not(.active) {
-      background: #e5e5ea;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
-    }
-
-    .content {
-      background: #fff;
-      border-radius: 14px;
-      padding: 16px 18px 20px;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.04);
-      border: 1px solid #e5e5ea;
-      min-height: 260px;
-    }
-
-    .content-header {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-
-    .content-header h2 {
-      font-size: 18px;
-      margin: 0;
-    }
-
-    .content-header .date {
-      font-size: 13px;
-      color: #666;
-    }
-
-    .content-header .tag {
-      font-size: 11px;
-      padding: 2px 7px;
-      border-radius: 999px;
-      background: #f2f2f7;
-      color: #555;
-    }
-
-    .meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 14px;
-      margin-bottom: 10px;
-      font-size: 12px;
-      color: #666;
-    }
-
-    .meta-row span {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .meta-row .dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 999px;
-      background: #007aff;
-    }
-
-    .section {
-      border-radius: 10px;
-      padding: 10px 12px 8px;
-      background: #f9f9fb;
-      margin-top: 8px;
-      border: 1px solid #ececf1;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
-    }
-
-    .section-header strong {
-      font-size: 13px;
-    }
-
-    .section-header .section-time {
-      font-size: 11px;
-      color: #777;
-    }
-
-    .section-header .chip {
-      font-size: 10px;
-      padding: 1px 6px;
-      border-radius: 999px;
-      background: #fff;
-      border: 1px solid #e5e5ea;
-      color: #555;
-    }
-
-    .item-list {
-      margin: 4px 0 0;
-      padding-left: 18px;
-      font-size: 13px;
-    }
-
-    .item-list li + li {
-      margin-top: 2px;
-    }
-
-    .note {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #777;
-      display: flex;
-      gap: 6px;
-      align-items: flex-start;
-    }
-
-    .note-icon {
-      font-size: 14px;
-    }
-
-    .empty {
-      font-size: 13px;
-      color: #888;
-      padding: 10px 0 4px;
-    }
-  </style>
+.mapcode {
+  font-size: 12px;
+  color: #888;
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <div>
-      <h1>旅遊行程</h1>
-      <span>點選左側日期，切換每天的詳細規劃</span>
+
+<!-- ---------------- Tab 選單 ---------------- -->
+<div class="tab-bar">
+  <div class="tab-btn active" data-page="prep">行前準備</div>
+  <div class="tab-btn" data-page="day1">Day 1</div>
+  <div class="tab-btn" data-page="day2">Day 2</div>
+  <div class="tab-btn" data-page="day3">Day 3</div>
+  <div class="tab-btn" data-page="day4">Day 4</div>
+  <div class="tab-btn" data-page="day5">Day 5</div>
+</div>
+
+<!-- ---------------- 行前準備 PAGE ---------------- -->
+<div id="prep" class="page">
+
+  <div class="card">
+    <div class="card-title">
+      📱 1. 購買 eSIM 網卡 
+      <span class="status status-red">尚未訂</span>
     </div>
-  </header>
+    <div class="card-sub">需求：吃到飽 eSIM・5人份</div>
+    <div class="item">💡 建議出發前一天掃描 QR Code 設定</div>
+  </div>
 
-  <main>
-    <!-- 左側：天數選單 -->
-    <aside class="day-nav">
-      <h2>行程日期</h2>
-      <small>點選以切換每日行程</small>
-      <div id="dayList" class="day-list"></div>
-    </aside>
+  <div class="card">
+    <div class="card-title">
+      🛂 2. Visit Japan Web 
+      <span class="status status-red">尚未填寫</span>
+    </div>
+    <div class="item">請於出發前完成入境審查與海關申報。</div>
+    <div class="item">🔗 <a href="https://vjw-lp.digital.go.jp" target="_blank">官方網站（中文）</a></div>
+  </div>
 
-    <!-- 右側：內容 -->
-    <section class="content">
-      <div id="contentInner">
-        <!-- 這裡由 JavaScript 動態填入 -->
-      </div>
-    </section>
-  </main>
+  <div class="card">
+    <div class="card-title">
+      🚌 3. 機場接送（去程）
+      <span class="status status-yellow">待訂</span>
+    </div>
+    <div class="item">預約七人座小巴</div>
+    <div class="item">⏰ 2/22（日）凌晨 04:00</div>
+    <div class="item">🏠 家裡 → 桃園機場 T1</div>
+  </div>
 
-  <script>
-    // 🔧 在這裡修改你的行程資料 ---------------------------------
-    const itinerary = [
+  <div class="card">
+    <div class="card-title">
+      ✈ 4. 飛機資料（全員）
+      <span class="status status-green">OK</span>
+    </div>
+    <div class="item">台灣虎航 IT210</div>
+    <div class="item">07:00 桃園 → 10:25 關西</div>
+    <div class="section-title">托運資訊：</div>
+    <div class="item">👨‍👩‍👧‍👦 CHIH YUN WU（15kg）<br>YU WEN / TIEN CHANG（無托運）</div>
+    <div class="item">🧔‍♂️ YEN CHING CHEN（40kg）<br>YI CHUNG CHENG（無托運）</div>
+  </div>
 
-  // ---------------- Day 1 ----------------
-  {
-    id: "day1",
-    label: "Day 1",
-    date: "2025/12/17",
-    subtitle: "福岡 → 大分（別府）",
-    startCity: "桃園 ✈ 福岡 → 別府",
-    theme: "租車、購物、溫泉美食",
-    sections: [
-      {
-        title: "上午",
-        time: "06:00–12:00",
-        type: "✈ 移動",
-        items: [
-          "06:00 桃園國際機場 → 10:20 抵達福岡機場",
-          "11:23 バジェット･レンタカー 福岡空港店（Budget）",
-          "📍 MAPCODE：13 354 126*14"
-        ]
-      },
-      {
-        title: "下午",
-        time: "12:00–17:00",
-        type: "🛍 購物",
-        items: [
-          "12:37 LaLaport 福岡（ららぽーと福岡）",
-          "📍 MAPCODE：13 233 333*37",
-          "16:54 地獄蒸工房 鐵輪（晚餐備用）",
-          "📍 MAPCODE：46 522 403*86"
-        ]
-      },
-      {
-        title: "晚上",
-        time: "17:00–20:00",
-        type: "🍽 美食 & 入住",
-        items: [
-          "17:59 別邸 安（入住）",
-          "📍 用「別邸 安 上平田町1732-11」導航",
-          "🍗 雞肉天婦羅始祖 東洋軒",
-          "📍 MAPCODE：46 465 637*58",
-          "🍜 別府冷麵 胡月（胡月冷麺）—無 MAPCODE，可用店名導航",
-          "🗼 別府塔 — 可用地名導航"
-        ]
-      }
-    ],
-    note: "第一天路程較長，建議保持彈性安排。"
-  },
+</div>
 
-  // ---------------- Day 2 ----------------
-  {
-    id: "day2",
-    label: "Day 2",
-    date: "2025/12/18",
-    subtitle: "別府一日 · 動物園 & 溫泉美食",
-    startCity: "別府",
-    theme: "親子動物園、地獄蒸體驗",
-    sections: [
-      {
-        title: "上午",
-        time: "08:30–09:00",
-        type: "🚗 移動",
-        items: [
-          "08:30 出發：別邸 安",
-          "09:00 九州自然動物園（アフリカンサファリ）",
-          "📍 MAPCODE：46 664 168*72"
-        ]
-      },
-      {
-        title: "下午",
-        time: "14:00–17:00",
-        type: "🍮 美食 & 散策",
-        items: [
-          "14:25 回到別邸 安",
-          "地獄蒸布丁 岡本屋（岡本屋売店 / 明礬）",
-          "📍 MAPCODE：46 519 707*71",
-          "地獄蒸工房 鐵輪（若第一天沒吃可補）",
-          "📍 MAPCODE：46 522 403*86",
-          "別府甘味茶屋（Amamichaya）",
-          "📍 MAPCODE：46 493 800*75",
-          "マルショク やまなみ店（超市採買）",
-          "📍 MAPCODE：46 522 175*47"
-        ]
-      },
-      {
-        title: "晚上",
-        time: "17:00–",
-        type: "🌙 回住宿",
-        items: [
-          "返回別邸 安（晚餐自由安排）",
-          "📍 用「別邸 安 上平田町1732-11」導航"
-        ]
-      }
-    ],
-    note: "動物園腹地大，建議預留 4–5 小時。"
-  },
+<!-- ---------------- Day 1 PAGE ---------------- -->
+<div id="day1" class="page" style="display:none;">
+  <div class="card">
+    <div class="card-title">🚗 Day 1 — 抵達福岡＋別府</div>
 
-  // ---------------- Day 3 ----------------
-  {
-    id: "day3",
-    label: "Day 3",
-    date: "2025/12/19",
-    subtitle: "別府 → 湯布院 → 福岡",
-    startCity: "別府 → 湯布院 → 福岡",
-    theme: "金鱗湖漫步、甜點購物",
-    sections: [
-      {
-        title: "上午",
-        time: "08:00–12:00",
-        type: "⛩ 散策",
-        items: [
-          "08:00 出發：別邸 安",
-          "08:36 Time’s 停車場 – 湯布院金鱗湖",
-          "📍 MAPCODE：269 359 671*78",
-          "09:40 天祖神社",
-          "📍 MAPCODE：269 359 557*56",
-          "10:21 湯之坪街道",
-          "📍 MAPCODE：269 358 471*52",
-          "10:58 湯布院商店街",
-          "📍 MAPCODE：269 357 086*42",
-          "蛋糕卷 B-SPEAK（本店）",
-          "📍 MAPCODE：269 358 402*05"
-        ]
-      },
-      {
-        title: "下午",
-        time: "14:00–17:00",
-        type: "🏨 入住",
-        items: [
-          "14:35 抵達 SOTEL Fukuoka Airport No.7",
-          "📍 用「SOTEL Fukuoka Airport No.7」導航"
-        ]
-      },
-      {
-        title: "晚上",
-        time: "17:00–",
-        type: "🛒 超市 & 夜景",
-        items: [
-          "福岡塔（夜景）",
-          "📍 MAPCODE：13 312 733*75",
-          "TRIALsmart KASUYA 採買",
-          "📍 MAPCODE：13 383 685*27"
-        ]
-      }
-    ],
-    note: "湯布院 B-SPEAK 常排隊，記得提早到。"
-  },
+    <div class="section-title">上午</div>
+    <div class="item">桃園 → 福岡</div>
+    <div class="item">Budget 租車</div>
+    <div class="mapcode">MAPCODE：13 354 126*14</div>
 
-  // ---------------- Day 4 ----------------
-  {
-    id: "day4",
-    label: "Day 4",
-    date: "2025/12/20",
-    subtitle: "太宰府・鳥栖 Outlet ・大名購物",
-    startCity: "福岡",
-    theme: "神社參拜 × Outlet 血拼",
-    sections: [
-      {
-        title: "上午",
-        time: "09:00–12:00",
-        type: "⛩ 參拜",
-        items: [
-          "09:00 出發：SOTEL Fukuoka Airport No.7",
-          "09:29 太宰府天滿宮",
-          "📍 MAPCODE：55 364 163"
-        ]
-      },
-      {
-        title: "下午",
-        time: "12:00–17:30",
-        type: "🛍 購物",
-        items: [
-          "11:56 鳥栖 Premium Outlets",
-          "📍 MAPCODE：37 856 350*05",
-          "17:37 福岡大名花園城市（大名ガーデンシティ）",
-          "📍 MAPCODE：13 317 319*16",
-          "TRIALsmart KASUYA 補貨",
-          "📍 MAPCODE：13 383 685*27"
-        ]
-      },
-      {
-        title: "晚上",
-        time: "19:55–",
-        type: "🏨 回飯店",
-        items: [
-          "返回 SOTEL Fukuoka Airport No.7"
-        ]
-      }
-    ]
-  },
+    <div class="section-title">下午</div>
+    <div class="item">LaLaport 福岡</div>
+    <div class="mapcode">MAPCODE：13 233 333*37</div>
 
-  // ---------------- Day 5 ----------------
-  {
-    id: "day5",
-    label: "Day 5",
-    date: "2025/12/21",
-    subtitle: "博多半日散策 → 還車 → 回台灣",
-    startCity: "福岡 → 桃園",
-    theme: "神社、美食、還車返家",
-    sections: [
-      {
-        title: "下午",
-        time: "13:50–17:00",
-        type: "🛕 散策 & 美食",
-        items: [
-          "13:50 出發：SOTEL Fukuoka Airport No.7",
-          "14:04 櫛田神社",
-          "📍 MAPCODE：13 319 676*23",
-          "15:18 一蘭拉麵 本社總本店（中洲）",
-          "📍 用「一蘭 本社総本店 中洲」導航",
-          "16:33 藍瓶咖啡 福岡天神店",
-          "📍 用店名導航"
-        ]
-      },
-      {
-        title: "晚上",
-        time: "17:40–22:25",
-        type: "✈ 還車返家",
-        items: [
-          "17:40 福岡塔",
-          "📍 MAPCODE：13 312 733*75",
-          "19:27 還車：Budget 福岡空港店",
-          "📍 MAPCODE：13 354 126*14",
-          "20:00 福岡國際機場 → 22:25 抵達桃園"
-        ]
-      }
-    ],
-    note: "建議預留時間還車、防塞車。"
-  }
+    <div class="section-title">晚上</div>
+    <div class="item">別邸 安 Check-in</div>
+    <div class="item">東洋軒（雞肉天婦羅）</div>
+    <div class="mapcode">MAPCODE：46 465 637*58</div>
+  </div>
+</div>
 
-];
-    // ----------------------------------------------------------
+<!-- ---------------- Day 2 PAGE ---------------- -->
+<div id="day2" class="page" style="display:none;">
+  <div class="card">
+    <div class="card-title">🦁 Day 2 — 九州自然動物園</div>
 
-    const dayListEl = document.getElementById("dayList");
-    const contentEl = document.getElementById("contentInner");
+    <div class="section-title">上午</div>
+    <div class="item">九州自然動物園</div>
+    <div class="mapcode">MAPCODE：46 664 168*72</div>
 
-    function renderDayButtons() {
-      dayListEl.innerHTML = "";
-      itinerary.forEach((day, index) => {
-        const btn = document.createElement("button");
-        btn.className = "day-btn" + (index === 0 ? " active" : "");
-        btn.dataset.dayId = day.id;
+    <div class="section-title">下午</div>
+    <div class="item">岡本屋布丁、地獄蒸</div>
+    <div class="mapcode">MAPCODE：46 519 707*71</div>
+  </div>
+</div>
 
-        btn.innerHTML = `
-          <span class="day-label">${day.label}</span>
-          <span class="day-sub">${day.date}</span>
-        `;
-        btn.addEventListener("click", () => setActiveDay(day.id));
-        dayListEl.appendChild(btn);
-      });
-    }
+<!-- ---------------- Day 3 PAGE ---------------- -->
+<div id="day3" class="page" style="display:none;">
+  <div class="card">
+    <div class="card-title">🎐 Day 3 — 湯布院散策＋回福岡</div>
 
-    function renderDayContent(day) {
-      if (!day) {
-        contentEl.innerHTML = `<p class="empty">尚未設定行程資料。</p>`;
-        return;
-      }
+    <div class="section-title">上午</div>
+    <div class="item">金鱗湖、湯布院商店街</div>
+    <div class="mapcode">MAPCODE：269 359 671*78</div>
+  </div>
+</div>
 
-      const sectionsHtml = day.sections
-        .map(
-          (sec) => `
-        <div class="section">
-          <div class="section-header">
-            <strong>${sec.title}</strong>
-            <span class="section-time">｜${sec.time}</span>
-            ${
-              sec.type
-                ? `<span class="chip">${sec.type}</span>`
-                : ""
-            }
-          </div>
-          <ul class="item-list">
-            ${sec.items.map((item) => `<li>${item}</li>`).join("")}
-          </ul>
-        </div>
-      `
-        )
-        .join("");
+<!-- ---------------- Day 4 PAGE ---------------- -->
+<div id="day4" class="page" style="display:none;">
+  <div class="card">
+    <div class="card-title">⛩ Day 4 — 太宰府＋鳥栖 Outlet</div>
 
-      contentEl.innerHTML = `
-        <div class="content-header">
-          <h2>${day.label}</h2>
-          <span class="date">${day.date}</span>
-          ${
-            day.theme
-              ? `<span class="tag">主軸：${day.theme}</span>`
-              : ""
-          }
-        </div>
-        <div class="meta-row">
-          ${
-            day.startCity
-              ? `<span><span class="dot"></span>${day.startCity}</span>`
-              : ""
-          }
-          ${
-            day.subtitle
-              ? `<span>📝 ${day.subtitle}</span>`
-              : ""
-          }
-        </div>
-        ${sectionsHtml}
-        ${
-          day.note
-            ? `<div class="note">
-                 <span class="note-icon">💡</span>
-                 <span>${day.note}</span>
-               </div>`
-            : ""
-        }
-      `;
-    }
+    <div class="section-title">上午</div>
+    <div class="item">太宰府天滿宮</div>
+    <div class="mapcode">MAPCODE：55 364 163</div>
 
-    function setActiveDay(dayId) {
-      const targetDay = itinerary.find((d) => d.id === dayId);
-      renderDayContent(targetDay);
+    <div class="section-title">下午</div>
+    <div class="item">鳥栖 Premium Outlets</div>
+    <div class="mapcode">MAPCODE：37 856 350*05</div>
+  </div>
+</div>
 
-      document
-        .querySelectorAll(".day-btn")
-        .forEach((btn) => btn.classList.remove("active"));
+<!-- ---------------- Day 5 PAGE ---------------- -->
+<div id="day5" class="page" style="display:none;">
+  <div class="card">
+    <div class="card-title">🏡 Day 5 — 福岡散策＋返家</div>
 
-      const activeBtn = document.querySelector(
-        `.day-btn[data-day-id="${dayId}"]`
-      );
-      if (activeBtn) activeBtn.classList.add("active");
-    }
+    <div class="section-title">下午</div>
+    <div class="item">櫛田神社</div>
+    <div class="mapcode">MAPCODE：13 319 676*23</div>
 
-    // 初始化
-    renderDayButtons();
-    if (itinerary.length > 0) {
-      renderDayContent(itinerary[0]);
-    } else {
-      renderDayContent(null);
-    }
-  </script>
+    <div class="section-title">晚上</div>
+    <div class="item">還車、回台灣</div>
+  </div>
+</div>
+
+<script>
+/* 切換頁籤 */
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+    document.getElementById(btn.dataset.page).style.display = "block";
+  });
+});
+</script>
+
 </body>
 </html>
