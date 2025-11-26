@@ -113,7 +113,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ---------------- ⭐ 新增：費用追蹤器的樣式 ⭐ ---------------- */
+/* ---------------- ⭐ 費用追蹤器的樣式 ⭐ ---------------- */
 #expense-tracker {
     margin: 14px;
     padding: 16px;
@@ -244,7 +244,7 @@ a:hover {
 .type-income { color: #0a8f00; font-weight: bold; }
 .type-expense { color: #c00; font-weight: bold; }
 
-/* ---------------- ⭐ 新增：行程時間軸樣式 (仿圖片) ⭐ ---------------- */
+/* ---------------- ⭐ 行程時間軸樣式 (仿圖片) ⭐ ---------------- */
 
 /* 日期標題區塊 */
 .day-header {
@@ -261,9 +261,13 @@ a:hover {
     font-weight: 900;
     color: #ff6f9c;
     margin-right: 8px;
+    /* 調整以容納 D1/D2 等標籤 */
 }
 .day-title {
     flex-grow: 1;
+    font-size: 16px;
+    font-weight: 600;
+    color: #555;
 }
 .day-weather {
     font-size: 14px;
@@ -407,7 +411,7 @@ a:hover {
       <span class="status status-yellow">待訂</span>
     </div>
     <div class="item">預約機場接送</div>
-    <div class="item">⏰ 出發時間：2025/12/17 凌晨 04:30</div>
+    <div class="item">⏰ 出發時間：2025/12/17 凌晨 04:00</div>
     <div class="item">🏠 家裡 → 桃園機場 T1</div>
   </div>
   <div class="card">
@@ -429,19 +433,19 @@ a:hover {
 
 <div id="day1" class="page" style="display:none;">
     <div class="day-header">
-        <span class="day-date">12/17 (三)</span>
-        <span class="day-title">🚗 Day 1 — 桃園 → 福岡 → 別府</span>
+        <span class="day-date">12/17 (三) D1</span>
+        <span class="day-title">🚗 桃園 → 福岡 → 別府</span>
     </div>
     <div class="timeline-container">
       <div class="timeline-item">
-        <div class="time-box">06:45</div>
+        <div class="time-box">06:00</div>
         <div class="content-card">
           <h4>桃園國際機場 T1 出發</h4>
           <p><a href="https://www.google.com/maps/search/?api=1&query=%E6%A1%83%E5%9C%92%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4" target="_blank">地圖連結</a></p>
         </div>
       </div>
       <div class="timeline-item">
-        <div class="time-box">10:00</div>
+        <div class="time-box">10:20</div>
         <div class="content-card">
           <h4>抵達 福岡國際機場</h4>
           <p><a href="https://www.google.com/maps/search/?api=1&query=Fukuoka+Airport" target="_blank">地圖連結</a></p>
@@ -501,8 +505,8 @@ a:hover {
 
 <div id="day2" class="page" style="display:none;">
     <div class="day-header">
-        <span class="day-date">12/18 (四)</span>
-        <span class="day-title">🦁 Day 2 — 九州自然動物園 & 別府美食</span>
+        <span class="day-date">12/18 (四) D2</span>
+        <span class="day-title">🦁 九州自然動物園 & 別府美食</span>
     </div>
     <div class="timeline-container">
       <div class="timeline-item">
@@ -568,8 +572,8 @@ a:hover {
 
 <div id="day3" class="page" style="display:none;">
     <div class="day-header">
-        <span class="day-date">12/19 (五)</span>
-        <span class="day-title">🎐 Day 3 — 湯布院散策 → 回到福岡</span>
+        <span class="day-date">12/19 (五) D3</span>
+        <span class="day-title">🎐 湯布院散策 → 回到福岡</span>
     </div>
     <div class="timeline-container">
       <div class="timeline-item">
@@ -663,8 +667,8 @@ a:hover {
 
 <div id="day4" class="page" style="display:none;">
     <div class="day-header">
-        <span class="day-date">12/20 (六)</span>
-        <span class="day-title">⛩ Day 4 — 太宰府＋鳥栖 Outlet＋大名聖誕市集</span>
+        <span class="day-date">12/20 (六) D4</span>
+        <span class="day-title">⛩ 太宰府＋鳥栖 Outlet＋大名聖誕市集</span>
     </div>
     <div class="timeline-container">
       <div class="timeline-item">
@@ -719,8 +723,8 @@ a:hover {
 
 <div id="day5" class="page" style="display:none;">
     <div class="day-header">
-        <span class="day-date">12/21 (日)</span>
-        <span class="day-title">🏡 Day 5 — 福岡市區散策＋還車返家</span>
+        <span class="day-date">12/21 (日) D5</span>
+        <span class="day-title">🏡 福岡市區散策＋還車返家</span>
     </div>
     <div class="timeline-container">
       <div class="timeline-item">
