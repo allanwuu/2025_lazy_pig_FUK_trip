@@ -14,7 +14,7 @@ body {
   color: #333;
 }
 
-/* ---------------- Tab 切換列 (已回復精簡 D1/D2 樣式) ---------------- */
+/* ---------------- Tab 切換列  ---------------- */
 .tab-bar {
   display: flex;
   position: sticky;
@@ -246,7 +246,6 @@ a:hover {
 .type-expense { color: #c00; font-weight: bold; }
 
 /* ---------------- ⭐ 行程時間軸樣式 (仿圖片) ⭐ ---------------- */
-
 /* 日期標題區塊 */
 .day-header {
     margin: 10px 14px 0;
@@ -277,55 +276,59 @@ a:hover {
     position: relative;
 }
 
-/* ⭐ 修正：垂直時間軸線位置調整 ⭐ */
+/* 垂直時間軸線：放在中間，左邊是時間小卡，右邊是內容卡 */
 .timeline-container::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 70px; /* 線條向右移動，為時間騰出空間 */
+    left: 120px;          /* ← 線的位置 */
     width: 2px;
     height: 100%;
     background-color: #ffb4c8;
     z-index: 1;
 }
 
-/* 單個行程卡片 (Card-Item) */
+/* 單個行程卡片 */
 .timeline-item {
     position: relative;
-    padding-left: 100px; /* ⭐ 修正：為時間和點預留更多空間 ⭐ */
-    margin-bottom: 15px;
+    padding-left: 160px;  /* ← 右邊留給內容卡片 */
+    margin-bottom: 18px;
     z-index: 2;
 }
 
-/* ⭐ 修正：時間軸上的圓點位置調整 ⭐ */
+/* 時間軸上的圓點 */
 .timeline-item::before {
     content: '';
     position: absolute;
-    top: 5px;
-    left: 68px; /* 配合線條位置 */
-    width: 8px;
-    height: 8px;
+    top: 10px;
+    left: 116px;          /* ← 靠近時間軸線 */
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background-color: #ff6f9c; 
     border: 2px solid white; 
     z-index: 3;
 }
 
-/* ⭐ 修正：時間標籤區塊調整，避免重疊 ⭐ */
+/* 時間小卡（不再被線和點遮住） */
 .time-box {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 80px; /* 給時間數字充足寬度 */
-    text-align: right; /* 右對齊，讓數字靠近點 */
-    font-weight: bold;
-    font-size: 15px;
+    top: 4px;
+    left: 16px;           /* ← 貼左邊一點 */
+    min-width: 70px;
+    padding: 4px 10px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
     color: #555;
-    background: transparent;
-    padding: 4px 15px 4px 0; /* 右邊內邊距確保數字與點之間有間隔 */
-    border-radius: 8px;
+    background: #ffffff;
+    border-radius: 999px; /* 膠囊形 */
+    border: 1px solid #ffd0e0;
+    box-shadow: 0 2px 6px rgba(255, 180, 200, 0.5);
+    z-index: 5;           /* ← 壓在所有東西上面 */
 }
-/* 讓原本的 .time-label 樣式失效 */
+
+/* 原本 .time-label 在 timeline 裡就不需要了 */
 .timeline-item .time-label {
     display: none;
 }
@@ -338,8 +341,6 @@ a:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     border: 1px solid #eee;
 }
-
-/* 行程標題/地點 */
 .content-card h4 {
     margin: 0 0 5px;
     font-size: 16px;
@@ -351,8 +352,6 @@ a:hover {
     font-size: 14px;
     color: #666;
 }
-
-/* 額外的資訊如地圖碼和備註 */
 .content-card .mapcode,
 .content-card .note {
     margin-top: 5px;
