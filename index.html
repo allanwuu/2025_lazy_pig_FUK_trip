@@ -14,7 +14,7 @@ body {
   color: #333;
 }
 
-/* ---------------- Tab 切換列 ---------------- */
+/* ---------------- Tab 切換列 (已回復精簡 D1/D2 樣式) ---------------- */
 .tab-bar {
   display: flex;
   position: sticky;
@@ -23,20 +23,18 @@ body {
   padding: 10px 0;
   border-bottom: 1px solid #eee;
   z-index: 10;
-  /* 修正：讓頁籤文字在手機上可以自動換行，避免擁擠 */
-  line-height: 1.2; 
 }
 
 .tab-btn {
   flex: 1;
   text-align: center;
   padding: 10px 0;
-  font-size: 13px; /* 修正：縮小字體以容納更多內容 */
+  font-size: 15px; /* 字體大小恢復正常 */
   font-weight: 600;
   color: #666;
   border-bottom: 3px solid transparent;
   cursor: pointer;
-  white-space: normal; /* 讓文字可以換行 */
+  white-space: nowrap; /* 確保不換行 */
 }
 
 .tab-btn.active {
@@ -264,7 +262,6 @@ a:hover {
     font-weight: 900;
     color: #ff6f9c;
     margin-right: 8px;
-    /* 調整以容納 D1/D2 等標籤 */
 }
 .day-title {
     flex-grow: 1;
@@ -272,65 +269,60 @@ a:hover {
     font-weight: 600;
     color: #555;
 }
-.day-weather {
-    font-size: 14px;
-    font-weight: normal;
-    color: #666;
-}
 
 /* 行程項目卡片容器 */
 .timeline-container {
     margin: 0 14px;
     padding: 10px 0 20px;
-    position: relative; /* 用於定位時間軸線 */
+    position: relative;
 }
 
-/* 垂直時間軸線 */
+/* ⭐ 修正：垂直時間軸線位置調整 ⭐ */
 .timeline-container::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 20px; /* 調整線的位置 */
+    left: 70px; /* 線條向右移動，為時間騰出空間 */
     width: 2px;
     height: 100%;
-    background-color: #ffb4c8; /* 柔和的粉色線 */
+    background-color: #ffb4c8;
     z-index: 1;
 }
 
 /* 單個行程卡片 (Card-Item) */
 .timeline-item {
     position: relative;
-    padding-left: 50px; /* 為時間和點預留空間 */
+    padding-left: 100px; /* ⭐ 修正：為時間和點預留更多空間 ⭐ */
     margin-bottom: 15px;
     z-index: 2;
 }
 
-/* 時間軸上的圓點 */
+/* ⭐ 修正：時間軸上的圓點位置調整 ⭐ */
 .timeline-item::before {
     content: '';
     position: absolute;
     top: 5px;
-    left: 18px; /* 對齊垂直線 */
+    left: 68px; /* 配合線條位置 */
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: #ff6f9c; /* 圓點顏色 */
-    border: 2px solid white; /* 讓點在白背景上更明顯 */
+    background-color: #ff6f9c; 
+    border: 2px solid white; 
     z-index: 3;
 }
 
-/* 時間標籤區塊 */
+/* ⭐ 修正：時間標籤區塊調整，避免重疊 ⭐ */
 .time-box {
     position: absolute;
     top: 0;
     left: 0;
-    width: 50px;
-    text-align: center;
+    width: 80px; /* 給時間數字充足寬度 */
+    text-align: right; /* 右對齊，讓數字靠近點 */
     font-weight: bold;
     font-size: 15px;
     color: #555;
     background: transparent;
-    padding: 4px 0;
+    padding: 4px 15px 4px 0; /* 右邊內邊距確保數字與點之間有間隔 */
     border-radius: 8px;
 }
 /* 讓原本的 .time-label 樣式失效 */
@@ -343,7 +335,7 @@ a:hover {
     background: white;
     padding: 15px;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* 輕微陰影 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     border: 1px solid #eee;
 }
 
@@ -378,11 +370,11 @@ a:hover {
 
 <div class="tab-bar">
   <div class="tab-btn active" data-page="prep">行前準備</div>
-  <div class="tab-btn" data-page="day1">12/17(三) D1</div>
-  <div class="tab-btn" data-page="day2">12/18(四) D2</div>
-  <div class="tab-btn" data-page="day3">12/19(五) D3</div>
-  <div class="tab-btn" data-page="day4">12/20(六) D4</div>
-  <div class="tab-btn" data-page="day5">12/21(日) D5</div>
+  <div class="tab-btn" data-page="day1">D1</div>
+  <div class="tab-btn" data-page="day2">D2</div>
+  <div class="tab-btn" data-page="day3">D3</div>
+  <div class="tab-btn" data-page="day4">D4</div>
+  <div class="tab-btn" data-page="day5">D5</div>
   <div class="tab-btn" data-page="expense">費用紀錄</div>
 </div>
 
@@ -514,8 +506,7 @@ a:hover {
         <div class="time-box">08:30</div>
         <div class="content-card">
           <h4>出發：別邸 安</h4>
-          <p><a href="https://www.google.com/maps/search/?api=1&query=%E5%88%A5%E9%82%B8+%E5%AE%89+%E4%B8%8A%E5%B9%B3%E7%94%B0%E7%94%BA1732-11" target="_blank">地圖連結</a></p>
-        </div>
+          </div>
       </div>
       <div class="timeline-item">
         <div class="time-box">09:00</div>
@@ -581,8 +572,7 @@ a:hover {
         <div class="time-box">09:00</div>
         <div class="content-card">
           <h4>出發：別邸 安</h4>
-          <p><a href="https://www.google.com/maps/search/?api=1&query=%E5%88%A5%E9%82%B8+%E5%AE%89+%E4%B8%8A%E5%B9%B3%E7%94%B0%E7%94%BA1732-11" target="_blank">地圖連結</a></p>
-        </div>
+          </div>
       </div>
       <div class="timeline-item">
         <div class="time-box">09:36</div>
@@ -676,8 +666,7 @@ a:hover {
         <div class="time-box">09:00</div>
         <div class="content-card">
           <h4>出發：SOTEL Fukuoka Airport No.7</h4>
-          <p><a href="https://www.google.com/maps/search/?api=1&query=SOTEL+Fukuoka+Airport+No.7" target="_blank">地圖連結</a></p>
-        </div>
+         </div>
       </div>
       <div class="timeline-item">
         <div class="time-box">09:30</div>
@@ -732,8 +721,7 @@ a:hover {
         <div class="time-box">10:30</div>
         <div class="content-card">
           <h4>出發：SOTEL Fukuoka Airport No.7</h4>
-          <p><a href="https://www.google.com/maps/search/?api=1&query=SOTEL+Fukuoka+Airport+No.7" target="_blank">地圖連結</a></p>
-        </div>
+          </div>
       </div>
       <div class="timeline-item">
         <div class="time-box">10:44</div>
