@@ -23,17 +23,20 @@ body {
   padding: 10px 0;
   border-bottom: 1px solid #eee;
   z-index: 10;
+  /* 修正：讓頁籤文字在手機上可以自動換行，避免擁擠 */
+  line-height: 1.2; 
 }
 
 .tab-btn {
   flex: 1;
   text-align: center;
   padding: 10px 0;
-  font-size: 15px;
+  font-size: 13px; /* 修正：縮小字體以容納更多內容 */
   font-weight: 600;
   color: #666;
   border-bottom: 3px solid transparent;
   cursor: pointer;
+  white-space: normal; /* 讓文字可以換行 */
 }
 
 .tab-btn.active {
@@ -375,11 +378,11 @@ a:hover {
 
 <div class="tab-bar">
   <div class="tab-btn active" data-page="prep">行前準備</div>
-  <div class="tab-btn" data-page="day1">D1</div>
-  <div class="tab-btn" data-page="day2">D2</div>
-  <div class="tab-btn" data-page="day3">D3</div>
-  <div class="tab-btn" data-page="day4">D4</div>
-  <div class="tab-btn" data-page="day5">D5</div>
+  <div class="tab-btn" data-page="day1">12/17(三) D1</div>
+  <div class="tab-btn" data-page="day2">12/18(四) D2</div>
+  <div class="tab-btn" data-page="day3">12/19(五) D3</div>
+  <div class="tab-btn" data-page="day4">12/20(六) D4</div>
+  <div class="tab-btn" data-page="day5">12/21(日) D5</div>
   <div class="tab-btn" data-page="expense">費用紀錄</div>
 </div>
 
@@ -438,18 +441,16 @@ a:hover {
     </div>
     <div class="timeline-container">
       <div class="timeline-item">
-        <div class="time-box">06:00</div>
+        <div class="time-box">06:45</div>
         <div class="content-card">
           <h4>桃園國際機場 T1 出發</h4>
-          <p><a href="https://www.google.com/maps/search/?api=1&query=%E6%A1%83%E5%9C%92%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4" target="_blank">地圖連結</a></p>
-        </div>
+          </div>
       </div>
       <div class="timeline-item">
-        <div class="time-box">10:20</div>
+        <div class="time-box">10:00</div>
         <div class="content-card">
           <h4>抵達 福岡國際機場</h4>
-          <p><a href="https://www.google.com/maps/search/?api=1&query=Fukuoka+Airport" target="_blank">地圖連結</a></p>
-        </div>
+          </div>
       </div>
       <div class="timeline-item">
         <div class="time-box">11:23</div>
