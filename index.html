@@ -143,12 +143,13 @@ a:hover {
 
 /* 讓輸入元件在手機上可以排兩行 */
 #expense-date { order: 1; }
-#expense-type { order: 2; } /* 新增類型輸入框的排序 */
-#expense-item { order: 3; }
-#expense-amount { order: 4; }
+#expense-type { order: 2; } /* 類型 */
+#expense-item { order: 3; } /* 項目 */
+#expense-amount { order: 4; } /* 金額 */
+#expense-note { order: 5; } /* 新增的備註欄位排在後面 */
 
 .input-actions {
-    order: 5;
+    order: 6; /* 動作按鈕排在最後 */
     display: flex;
     gap: 10px;
     flex-grow: 1;
@@ -194,6 +195,11 @@ a:hover {
 #expense-table td:last-child {
     white-space: nowrap; 
 }
+/* 備註欄位可佔用較大空間 */
+#expense-table th:nth-child(4) { /* 假設備註是第4個欄位 */
+    width: 25%;
+}
+
 
 #expense-table th {
     background-color: #ffdae4;
@@ -554,8 +560,7 @@ a:hover {
             </select>
             <input type="text" id="expense-item" placeholder="項目 (例如: 虎航機票、換匯)" required>
             <input type="number" id="expense-amount" placeholder="金額 (日圓)" min="1" required>
-            
-            <input type="hidden" id="data-editing-id" value=""> 
+            <input type="text" id="expense-note" placeholder="備註 (選填)" > <input type="hidden" id="data-editing-id" value=""> 
             
             <div class="input-actions">
                 <button id="add-expense-btn" onclick="addOrUpdateExpense()">新增紀錄</button>
@@ -567,27 +572,25 @@ a:hover {
             <thead>
                 <tr>
                     <th>日期</th>
-                    <th>類型</th> <th style="width: 35%;">項目</th>
+                    <th>類型</th> 
+                    <th style="width: 25%;">項目</th>
                     <th>金額 (日圓)</th>
-                    <th>操作</th>
+                    <th>備註</th> <th>操作</th>
                 </tr>
             </thead>
             <tbody id="expense-body">
                 </tbody>
             <tfoot>
                 <tr id="total-summary-row">
-                    <td colspan="2"><strong>收入總計 (Income)</strong></td>
-                    <td id="total-income">0</td>
+                    <td colspan="3"><strong>收入總計 (Income)</strong></td> <td id="total-income">0</td>
                     <td colspan="2"></td>
                 </tr>
                 <tr id="total-summary-row">
-                    <td colspan="2"><strong>支出總計 (Expense)</strong></td>
-                    <td id="total-expense">0</td>
+                    <td colspan="3"><strong>支出總計 (Expense)</strong></td> <td id="total-expense">0</td>
                     <td colspan="2"></td>
                 </tr>
                 <tr id="balance-row">
-                    <td colspan="2"><strong>餘額 (Balance)</strong></td>
-                    <td id="total-balance" class="balance-positive">0</td>
+                    <td colspan="3"><strong>餘額 (Balance)</strong></td> <td id="total-balance" class="balance-positive">0</td>
                     <td colspan="2"></td>
                 </tr>
             </tfoot>
@@ -615,7 +618,11 @@ function saveExpenses() {
 function loadExpenses() {
     const savedData = localStorage.getItem('fukuoka_expenses');
     if (savedData) {
-        expenses = JSON.parse(savedData);
+        // 載入時，如果舊資料沒有 'note' 欄位，給予空字串預設值
+        expenses = JSON.parse(savedData).map(exp => ({
+            ...exp,
+            note: exp.note || '' // 確保舊資料也有 note 欄位
+        }));
     }
     renderExpenses();
 }
@@ -627,9 +634,10 @@ function loadExpenses() {
 // 新增或更新紀錄
 function addOrUpdateExpense() {
     const date = document.getElementById('expense-date').value;
-    const type = document.getElementById('expense-type').value; // 取得類型
+    const type = document.getElementById('expense-type').value; 
     const item = document.getElementById('expense-item').value.trim();
     const amount = parseFloat(document.getElementById('expense-amount').value);
+    const note = document.getElementById('expense-note').value.trim(); // ⭐ 擷取備註內容 ⭐
     const editingId = document.getElementById('data-editing-id').value;
 
     // 基礎檢查
@@ -643,9 +651,10 @@ function addOrUpdateExpense() {
         const index = expenses.findIndex(exp => exp.id === editingId);
         if (index > -1) {
             expenses[index].date = date;
-            expenses[index].type = type; // 更新類型
+            expenses[index].type = type; 
             expenses[index].item = item;
             expenses[index].amount = amount;
+            expenses[index].note = note; // ⭐ 更新備註 ⭐
         }
         clearEditMode();
     } else {
@@ -653,9 +662,10 @@ function addOrUpdateExpense() {
         const newExpense = {
             id: Date.now().toString(), 
             date,
-            type, // 儲存類型
+            type, 
             item,
             amount,
+            note, // ⭐ 儲存備註 ⭐
         };
         expenses.push(newExpense);
     }
@@ -665,9 +675,10 @@ function addOrUpdateExpense() {
     renderExpenses(); 
 
     // 清空輸入欄位，準備下次輸入
-    document.getElementById('expense-type').value = 'expense'; // 預設回到支出
+    document.getElementById('expense-type').value = 'expense'; 
     document.getElementById('expense-item').value = '';
     document.getElementById('expense-amount').value = '';
+    document.getElementById('expense-note').value = ''; // ⭐ 清空備註欄位 ⭐
     document.getElementById('expense-item').focus();
 }
 
@@ -692,9 +703,10 @@ function editExpense(id) {
 
     // 1. 將資料填入輸入框
     document.getElementById('expense-date').value = expenseToEdit.date;
-    document.getElementById('expense-type').value = expenseToEdit.type; // 填入類型
+    document.getElementById('expense-type').value = expenseToEdit.type; 
     document.getElementById('expense-item').value = expenseToEdit.item;
     document.getElementById('expense-amount').value = expenseToEdit.amount;
+    document.getElementById('expense-note').value = expenseToEdit.note || ''; // ⭐ 填入備註 ⭐
     
     // 2. 儲存正在編輯的 ID
     document.getElementById('data-editing-id').value = id;
@@ -716,6 +728,7 @@ function clearEditMode() {
     document.getElementById('expense-type').value = 'expense';
     document.getElementById('expense-item').value = '';
     document.getElementById('expense-amount').value = '';
+    document.getElementById('expense-note').value = ''; // ⭐ 清空備註欄位 ⭐
 }
 
 // 重新繪製整個表格
@@ -733,7 +746,7 @@ function renderExpenses() {
         // 欄位 1: 日期
         newRow.insertCell(0).textContent = exp.date;
         
-        // 欄位 2: 類型 (新增)
+        // 欄位 2: 類型
         const typeCell = newRow.insertCell(1);
         typeCell.textContent = exp.type === 'income' ? '收入' : '支出';
         typeCell.className = exp.type === 'income' ? 'type-income' : 'type-expense';
@@ -745,6 +758,9 @@ function renderExpenses() {
         const amountCell = newRow.insertCell(3);
         amountCell.textContent = exp.amount.toLocaleString('en-US'); 
         
+        // 欄位 5: 備註 (新增)
+        newRow.insertCell(4).textContent = exp.note || '-'; 
+
         // 計算總和
         if (exp.type === 'income') {
             totalIncome += exp.amount;
@@ -752,8 +768,8 @@ function renderExpenses() {
             totalExpense += exp.amount;
         }
 
-        // 欄位 5: 操作欄位 (編輯和刪除按鈕)
-        const actionCell = newRow.insertCell(4);
+        // 欄位 6: 操作欄位 (編輯和刪除按鈕)
+        const actionCell = newRow.insertCell(5);
         
         const editButton = document.createElement('button');
         editButton.textContent = '編輯';
@@ -779,6 +795,11 @@ function calculateBalance(totalIncome, totalExpense) {
     const incomeStr = totalIncome.toLocaleString('en-US');
     const expenseStr = totalExpense.toLocaleString('en-US');
     const balanceStr = totalBalance.toLocaleString('en-US');
+
+    // 顯示總計 (注意：這裡的 colspan 會隨著新增的備註欄位調整)
+    document.getElementById('total-income').parentElement.children[0].setAttribute('colspan', '3');
+    document.getElementById('total-expense').parentElement.children[0].setAttribute('colspan', '3');
+    document.getElementById('total-balance').parentElement.children[0].setAttribute('colspan', '3');
 
     // 顯示總計
     document.getElementById('total-income').textContent = incomeStr;
