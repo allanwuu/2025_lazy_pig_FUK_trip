@@ -4,22 +4,41 @@
 <meta charset="UTF-8">
 <title>2025懶豬的福岡之旅</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-body {
-  margin: 0;
-  background: #fdfcff;
-  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
-  color: #333;
+:root {
+  /* 主色：莫蘭迪綠灰 */
+  --accent: rgb(188, 204, 196);               /* #BCCCC4 */
+  --accent-soft: rgba(188, 204, 196, 0.18);   /* 卡片／區塊淡底 */
+  --accent-border: rgba(188, 204, 196, 0.45); /* 邊框 */
+  --accent-strong: rgb(104, 120, 113);        /* 深字色 */
+
+  /* 背景與文字 */
+  --bg-body: #f6f4f1;         /* 全頁米白 */
+  --card-bg: #ffffff;         /* 卡片白底 */
+  --text-main: #2f3432;       /* 主要文字 */
+  --text-sub: #666a68;        /* 次要文字 */
+
+  /* 連結 */
+  --link: #4f7c74;
+  --link-hover: #3d635c;
 }
 
-/* Tab 切換列 */
+body {
+  margin: 0;
+  background: var(--bg-body);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+  color: var(--text-main);
+}
+
+/* Tab 切換列：底色白色 */
 .tab-bar {
   display: flex;
   position: sticky;
   top: 0;
-  background: white;
+  background: #ffffff;
   padding: 10px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
   z-index: 10;
   overflow-x: auto;
 }
@@ -29,51 +48,63 @@ body {
   padding: 10px 0;
   font-size: 15px;
   font-weight: 600;
-  color: #666;
+  color: #808583;
   border-bottom: 3px solid transparent;
   cursor: pointer;
   white-space: nowrap;
   min-width: 60px;
 }
 .tab-btn.active {
-  color: #ff6f9c;
-  border-bottom: 3px solid #ff6f9c;
+  color: var(--accent-strong);
+  border-bottom: 3px solid var(--accent);
 }
 
 /* 卡片通用樣式 */
 .card {
-  background: white;
+  background: var(--card-bg);
   margin: 14px;
   padding: 16px;
   border-radius: 18px;
-  box-shadow: 0 4px 12px rgba(255, 180, 200, 0.25);
+  box-shadow: 0 10px 30px rgba(15, 23, 21, 0.06);
+  border: 1px solid rgba(0,0,0,0.02);
 }
 .card-title {
   font-size: 17px;
-  font-weight: bold;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 8px;
 }
 .card-sub {
-  color: #666;
+  color: var(--text-sub);
   font-size: 14px;
   margin: 4px 0 8px;
 }
+
 .status {
   padding: 2px 10px;
-  border-radius: 12px;
+  border-radius: 999px;
   font-size: 12px;
   margin-left: auto;
-  font-weight: bold;
+  font-weight: 600;
 }
-.status-red { background: #ffdddd; color: #c00; }
-.status-yellow { background: #fff2c2; color: #c98b00; }
-.status-green { background: #d9ffd9; color: #0a8f00; }
+.status-red {
+  background: rgba(199, 103, 103, 0.14);
+  color: #8e3d3d;
+}
+.status-yellow {
+  background: rgba(210, 178, 115, 0.16);
+  color: #7b5a1f;
+}
+.status-green {
+  background: rgba(142, 178, 142, 0.18);
+  color: #2c6b3a;
+}
 
+/* 文字類 */
 .section-title {
-  font-weight: bold;
+  font-weight: 600;
   margin: 10px 0 6px;
   font-size: 15px;
 }
@@ -85,32 +116,35 @@ body {
   display: inline-block;
   width: 3.8em;
   font-weight: 700;
-  color: #ff6f9c;
+  color: var(--accent-strong);
 }
 .mapcode {
   font-size: 12px;
-  color: #888;
+  color: #8b8f8d;
 }
 .note {
   font-size: 12px;
-  color: #666;
+  color: var(--text-sub);
 }
+
+/* 連結 */
 a {
-  color: #3b82f6;
+  color: var(--link);
   text-decoration: none;
 }
 a:hover {
+  color: var(--link-hover);
   text-decoration: underline;
 }
 
-/* 匯率換算器 (New) */
+/* 匯率換算器 */
 #rate-calculator {
-  background: #f0f7ff; /* 淺藍底區隔 */
-  border: 1px solid #cce4ff;
+  background: rgba(188, 204, 196, 0.32);
+  border: 1px solid var(--accent-border);
 }
 #rate-calculator .card-title {
-  font-size: 24px; 
-  margin-bottom: 15px; 
+  font-size: 24px;
+  margin-bottom: 15px;
 }
 .rate-row {
   display: flex;
@@ -127,27 +161,30 @@ a:hover {
 }
 .rate-input-group input {
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--accent-border);
   border-radius: 6px;
   font-size: 16px;
   width: 100%;
+  background-color: #fbfaf8;
 }
 .calc-result {
   font-size: 20px;
   font-weight: 900;
-  color: #0a8f00;
+  color: var(--accent-strong);
   margin-left: auto;
   white-space: nowrap;
 }
+
 
 /* 費用追蹤器 */
 #expense-tracker {
   margin: 14px;
   padding: 16px;
-  border: 1px solid #ff6f9c40;
+  border: 1px solid rgba(188, 204, 196, 0.35);  /* 還是搭配莫蘭迪綠灰，但比較淡 */
   border-radius: 18px;
-  background-color: #ffeef2;
+  background-color: #fbfaf8;                    /* 比匯率小幫手淺、偏米白 */
 }
+
 .input-form {
   display: flex;
   flex-wrap: wrap;
@@ -159,36 +196,32 @@ a:hover {
 .input-form select {
   flex-grow: 1;
   padding: 10px;
-  border: 1px solid #ff6f9c80;
-  border-radius: 4px;
+  border: 1px solid var(--accent-border);
+  border-radius: 6px;
   box-sizing: border-box;
   min-width: 100px;
+  background-color: #ffffff; /* 收支表單改成純白，對比比較清楚 */
 }
-#expense-date { order: 1; }
-#expense-type { order: 2; }
-#expense-item { order: 3; }
-#expense-amount { order: 4; }
-#expense-note { order: 5; }
 .input-actions {
   order: 6;
   display: flex;
   gap: 10px;
   flex-grow: 1;
 }
-.input-actions button {
-  flex: 1;
-  min-width: 80px;
-}
 .input-form button {
   padding: 10px 15px;
-  background-color: #ff6f9c;
-  color: white;
+  background-color: var(--accent-strong);
+  color: #fdfdfd;
   border: none;
-  border-radius: 4px;
+  border-radius: 999px;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.2s;
+  font-weight: 600;
+  font-size: 14px;
 }
+.input-form button:hover {
+  opacity: 0.92;
+}
+  
 #add-expense-btn { background-color: #4CAF50; }
 #save-expense-btn { background-color: #007bff; display: none; }
 
@@ -197,10 +230,14 @@ a:hover {
   border-collapse: collapse;
 }
 #expense-table th, #expense-table td {
-  border: 1px solid #ffd0e0;
+  border: 1px solid rgba(0,0,0,0.04);
   padding: 10px;
   text-align: left;
   font-size: 14px;
+}
+#expense-table th {
+  background-color: #f2f1ee;
+  font-weight: 600;
 }
 #expense-table td:last-child {
   white-space: nowrap;
@@ -208,57 +245,53 @@ a:hover {
 #expense-table th:nth-child(4) {
   width: 25%;
 }
-#expense-table th {
-  background-color: #ffdae4;
-  font-weight: bold;
-}
 #total-summary-row td {
   background-color: #f7f7f7;
   font-weight: bold;
   font-size: 1.1em;
 }
 #balance-row td {
-  background-color: #fff8e1;
+  background-color: #f0ead6;
   font-weight: bold;
   font-size: 1.3em;
 }
-.balance-positive { color: #0a8f00; }
-.balance-negative { color: #c00; }
+.balance-positive { color: #2f6f3b; }
+.balance-negative { color: #a13a3a; }
 #expense-body button {
-  background-color: #f44336;
+  background-color: #e25e5e;
   color: white;
   border: none;
   padding: 5px 8px;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 999px;
   font-size: 12px;
   margin-right: 5px;
 }
-#expense-body button.edit-btn { background-color: #ff9800; }
-.type-income { color: #0a8f00; font-weight: bold; }
-.type-expense { color: #c00; font-weight: bold; }
+#expense-body button.edit-btn { background-color: #d0933e; }
+.type-income { color: #2f6f3b; font-weight: 600; }
+.type-expense { color: #a13a3a; font-weight: 600; }
 
 /* 行程時間軸 */
 .day-header {
   margin: 10px 14px 0;
   padding: 10px 0;
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  color: #333;
+  color: var(--text-main);
 }
 .day-date {
   font-size: 22px;
-  font-weight: 900;
-  color: #ff6f9c;
+  font-weight: 800;
+  color: var(--accent-strong);
   margin-right: 8px;
 }
 .day-title {
   flex-grow: 1;
   font-size: 16px;
   font-weight: 600;
-  color: #555;
+  color: #595f5c;
 }
 .timeline-container {
   margin: 0 14px;
@@ -273,58 +306,59 @@ a:hover {
 .time-box {
   min-width: 60px;
   max-width: 60px;
-  border-radius: 12px;
-  border: 1px solid #ffd0e3;
-  background: #fff4f8;
+  border-radius: 14px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-soft); /* 行程小卡底色 */
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   font-size: 14px;
-  color: #ff6f9c;
-  box-shadow: 0 3px 6px rgba(255, 180, 200, 0.4);
+  color: var(--accent-strong);
+  box-shadow: 0 6px 14px rgba(15, 23, 21, 0.08);
 }
 .timeline-item .time-label {
   display: none;
 }
 .content-card {
   flex: 1;
-  background: white;
+  background: var(--card-bg);
   padding: 12px 14px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #eee;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(15, 23, 21, 0.06);
+  border: 1px solid rgba(0,0,0,0.03);
 }
 .content-card h4 {
   margin: 0 0 5px;
   font-size: 16px;
-  font-weight: bold;
-  color: #333;
+  font-weight: 700;
+  color: var(--text-main);
 }
 .content-card p {
   margin: 0;
   font-size: 14px;
-  color: #666;
+  color: var(--text-sub);
 }
 .content-card .mapcode,
 .content-card .note {
   margin-top: 5px;
   padding-top: 5px;
-  border-top: 1px dashed #eee;
+  border-top: 1px dashed rgba(0,0,0,0.08);
   font-size: 12px;
 }
 .content-card .note {
   border-top: none;
 }
+
 /* 車程小卡 */
 .drive-info {
   margin-top: 6px;
   padding: 6px 10px;
   font-size: 12px;
-  color: #555;
-  background: #fff8e5;
-  border-radius: 8px;
-  border: 1px solid #ffe0aa;
+  color: #5b615e;
+  background: #f7efe2;
+  border-radius: 10px;
+  border: 1px solid #ecd7b7;
   display: inline-block;
 }
 .drive-info strong { font-weight: 700; }
@@ -392,15 +426,14 @@ a:hover {
   </div>
 </div>
 
-  
 <div id="day1" class="page" style="display:none;">
-  <div class="day-header"><span class="day-date">12/17 (三) D1</span><span class="day-title">🚗 桃園 → 福岡 → 別府</span></div>
+  <div class="day-header"><span class="day-date">12/17 (三) </span><span class="day-title">🚗 福岡 → 別府</span></div>
   <div class="timeline-container">
     <div class="timeline-item">
       <div class="time-box">10:00</div>
       <div class="content-card">
         <h4>抵達 福岡國際機場</h4>
-        <div class="note">⭐ 到國際航廈1樓的租車櫃檯先報到，會有接驟車去租車店</div>
+        <div class="note">⭐ 到國際航廈1樓的租車櫃檯先報到，會有接駁車去租車店</div>
       </div>
     </div>
     <div class="timeline-item">
@@ -506,11 +539,11 @@ a:hover {
 </div>
 
 <div id="day2" class="page" style="display:none;">
-  <div class="day-header"><span class="day-date">12/18 (四) D2</span><span class="day-title">🦁 九州自然動物園 & 別府美食</span></div>
+  <div class="day-header"><span class="day-date">12/18 (四) </span><span class="day-title">🦁 九州自然動物園 & 別府美食</span></div>
   <div class="timeline-container">
 
     <div class="timeline-item">
-      <div class="time-box">08:30</div>
+      <div class="time-box">07:50</div>
       <div class="content-card">
         <h4>出發：別邸 安</h4>
         <div class="drive-info">
@@ -630,8 +663,8 @@ a:hover {
 
 <div id="day3" class="page" style="display:none;">
   <div class="day-header">
-    <span class="day-date">12/19 (五) D3</span>
-    <span class="day-title">🎐 湯布院散策 → 回到福岡</span>
+    <span class="day-date">12/19 (五) </span>
+    <span class="day-title">🎐 湯布院散策 → 福岡市區 </span>
   </div>
 
   <div class="timeline-container">
@@ -706,7 +739,7 @@ a:hover {
         <div class="mapcode">📍 MAPCODE：269 358 656*00</div>
         <div class="note">⭐ 逛到差不多、看小孩體力，下午回福岡，最晚2點半離開 </div>
         <div class="drive-info">
-          🚙✨ <strong>湯布院 → 福岡市區民宿（SOTEL 一帶）</strong><br>
+          🚙✨ <strong>湯布院 → 福岡市區民宿 </strong><br>
           約 110 公里、約 1.5 小時<br>
           🛣 大分自動車道 → 九州自動車道 → 福岡都市高速／市區道路
         </div>
@@ -782,10 +815,11 @@ a:hover {
 
   </div>
 </div>
+
 <div id="day4" class="page" style="display:none;">
   <div class="day-header">
-    <span class="day-date">12/20 (六) D4</span>
-    <span class="day-title">⛩ 太宰府＋鳥栖 Outlet＋大名聖誕市集</span>
+    <span class="day-date">12/20 (六) </span>
+    <span class="day-title">⛩ 太宰府＋鳥栖Outlet＋大名聖誕市集</span>
   </div>
 
   <div class="timeline-container">
@@ -878,8 +912,9 @@ a:hover {
 
   </div>
 </div>
+
 <div id="day5" class="page" style="display:none;">
-  <div class="day-header"><span class="day-date">12/21 (日) D5</span><span class="day-title">🏡 福岡市區＋還車返家</span></div>
+  <div class="day-header"><span class="day-date">12/21 (日) </span><span class="day-title">🏡 福岡市區小景點 → 回台灣 </span></div>
   <div class="timeline-container">
 
     <div class="timeline-item">
@@ -982,6 +1017,7 @@ a:hover {
 
   </div>
 </div>
+
 <div id="expense" class="page" style="display:none;">
   <div class="card" id="rate-calculator">
     <div class="card-title">💳 匯率小幫手</div>
