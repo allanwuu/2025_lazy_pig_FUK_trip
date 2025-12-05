@@ -362,10 +362,59 @@ a:hover {
   display: inline-block;
 }
 .drive-info strong { font-weight: 700; }
+
+  /* --- 頁首 Banner --- */
+.top-banner {
+  position: relative;
+  width: 100%;
+  height: 200px; /* 可調 180–240 看你想呈現多少畫面 */
+  background-image: url('https://raw.githubusercontent.com/allanwuu/2025_FUK/main/31747FC4-5C8E-4A12-9BA7-87E5BF4FF4EA.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 0 0 18px 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+  
+/* 半透明遮罩（讓字可讀） */
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+}
+
+/* 文字區塊 */
+.banner-text {
+  position: absolute;
+  bottom: 18px;
+  left: 20px;
+  color: #fff;
+}
+
+.banner-text h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.banner-text p {
+  margin: 3px 0 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+  
 </style>
 </head>
 
 <body>
+<div class="top-banner">
+  <div class="banner-overlay"></div>
+  <div class="banner-text">
+    <p> 老吳旅行社主辦 ✈️🚗</p>
+  </div>
+</div>
+  
 <div class="tab-bar">
   <div class="tab-btn active" data-page="prep">行前準備</div>
   <div class="tab-btn" data-page="day1">D1</div>
