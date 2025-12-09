@@ -350,6 +350,49 @@ a:hover {
   border-top: none;
 }
 
+/* 行程卡片中的照片縮圖 */
+.content-card .photo-thumb {
+  margin-top: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.content-card .photo-thumb img {
+  width: 100%;
+  display: block;
+  max-height: 220px;
+  object-fit: cover;
+}
+
+/* 點開放大的遮罩視窗 */
+#image-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;            /* 預設隱藏 */
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+#image-modal.active {
+  display: flex;
+}
+#image-modal img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+#image-modal .close-btn {
+  position: absolute;
+  top: 16px;  right: 18px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;  border: none;
+  border-radius: 999px;  padding: 6px 10px;
+  font-size: 14px;  cursor: pointer;
+}
+  
 /* 車程小卡 */
 .drive-info {
   margin-top: 6px;
@@ -407,6 +450,13 @@ a:hover {
 </style>
 </head>
 
+
+ <div id="image-modal">
+  <button class="close-btn">✕</button>
+  <img src="" alt="">
+</div>
+
+  
 <body>
 <div class="top-banner">
   <div class="banner-overlay"></div>
@@ -886,6 +936,13 @@ a:hover {
           約 13–15 公里、20–30 分鐘<br>
           🛣 福岡都市高速＋一般市區道路
         </div>
+
+        <div class="photo-thumb">
+          <img src="daza_map.png"
+               alt="行程地圖"
+               class="zoom-img">
+        </div>
+
       </div>
     </div>
 
@@ -1292,6 +1349,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// 行程照片放大功能
+  const modal = document.getElementById('image-modal');
+  const modalImg = modal ? modal.querySelector('img') : null;
+  const closeBtn = modal ? modal.querySelector('.close-btn') : null;
+// 縮圖點擊 → 打開大圖
+  document.querySelectorAll('.zoom-img').forEach(img => {
+    img.addEventListener('click', () => {
+      if (!modal || !modalImg) return;
+      modalImg.src = img.src;
+      modalImg.alt = img.alt || '';
+      modal.classList.add('active');
+    });
+  });
+
+// 關閉按鈕
+  if (closeBtn && modal) {
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+      if (modalImg) modalImg.src = '';
+    });
+
+    // 點遮罩空白處也可以關閉
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+        if (modalImg) modalImg.src = '';
+      }
+    });
+  }
+
+  
 </script>
 </body>
 </html>
